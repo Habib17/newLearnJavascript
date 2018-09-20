@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style>
+      html {
+        font-family: sans-serif;
+      }
+      body {
+        width: 50%;
+        max-width: 800px;
+        min-width: 480px;
+        margin: 0 auto;
+      }
+      .lastResult {
+        color: white;
+        padding: 3px;
+      }
+    </style>
+</head>
+<body>
+ <h1>Game tebak angka</h1>
+	<p>Kami telah memilih nomor acak antara 1 dan 100. Lihat apakah Anda dapat menebaknya dalam 10 putaran atau kurang. Kami akan memberi tahu Anda jika tebakan Anda terlalu tinggi atau terlalu rendah.</p>
+
+<div class="form">
+	<label for="guessField"> Masukkan Angka : </label>
+	<input type="text" class="guessField" id="guessField">
+	<input type="submit" name="" value="Submit guess" class="guessSubmit">
+ </div>
+
+
+<div class="resultParas">
+	<p class="guesses"></p>
+	<p class="lastResult"></p>
+	<p class="lowOrHi"></p>
+</div>
+<script type="text/javascript">
+	var randomNumber = 	Math.floor(Math.random() * 100) + 1;
+	var guesses		 =	document.querySelector('.guesses');
+	var lastResult 	 =	document.querySelector('.lastResult');
+	var lowOrHi		 =  document.querySelector('.lowOrHi');
+
+	var guessSubmit	 =	document.querySelector('.guessSubmit');
+	var guessField	 =	document.querySelector('.guessField');
+
+	var guessCount	 = 1;
+	var resetButton;
+	guessField.focus();
+
+	function checkGuess(){
+		var userGuess = Number(guessField.value);
+
+		if (guessCount === 1) {
+		guesses.textContent = 'Tebakan Sebelumnya :';
+		}	
+
+		guesses.textContent += userGuess + ' ';
+
+		if(userGuess === randomNumber){
+		lastResult.textContent = 'Selamat tebakanmu benar';
+		lastResult.style.backgroundColor = 'green';
+		lowOrHi.textContent = ''
+		setGameOver();
+		}
+
+		else if(guessCount === 10){
+		lastResult.textContent = '!!!GAME BERAKHIR!!!';
+		lowOrHi.textContent = '';
+		setGameOver();
+		}
+
+		else{
+		lastResult.textContent = 'Salah!';
+		lastResult.style.backgroundColor = 'red';
+		if(userGuess < randomNumber){
+			lowOrHi.textContent = 'Tebakan Terakhir terlalu kecil nilainya';
+		}
+		else if(userGuess > randomNumber){
+			lowOrHi.textContent = 'Tebakan Terakhir terlalu besar nilainya';
+		}
+	}
+
+	guessCount++;
+	guessField.value = '';
+	guessField.focus();
+
+	}
+
+	guessSubmit.addEventListener('click', checkGuess);
+	function setGameOver(){
+		guessField.disabled = true;
+		guessSubmit.disabled = true;
+		resetButton = document.createElement('button');
+		resetButton.textContent = 'Mulai game baru';
+		document.body.appendChild(resetButton);
+		resetButton.addEventListener('click', resetGame);
+	}
+
+	function resetGame(){
+		guessCount = 1;
+
+		var resetParas = document.querySelectorAll('.resultParas p');
+		for(var i = 0; i < resetParas.length ; i++){
+			resetParas[i].textContent = ' ';
+		}
+		resetButton.parentNode.removeChild(resetButton);
+
+		guessField.disabled = false;
+		guessSubmit.disabled = false;
+		guessField.value = '';
+		guessField.focus();
+
+		lastResult.style.backgroundColor = 'white';
+
+		randomNumber = Math.floor(Math.random() * 100) + 1;
+
+	}
+</script>
+</body>
+</html>
